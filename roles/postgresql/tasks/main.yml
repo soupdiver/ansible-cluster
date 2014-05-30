@@ -1,0 +1,12 @@
+---
+# Playbook for postgresql servers
+- name: Install packages
+  action: apt pkg={{item}} state=latest update_cache=yes
+  sudo: yes
+  with_items:
+    - postgresql-9.3
+    - postgresql-contrib
+    - python-psycopg2
+
+- name: ensure postgresql is running
+  service: name=postgresql state=started

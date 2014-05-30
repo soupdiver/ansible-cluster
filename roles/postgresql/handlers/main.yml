@@ -1,0 +1,4 @@
+---
+# Handlers for postgresql servers
+- name: restart PostgreSQL
+  action: service name=postgresql state=restarted

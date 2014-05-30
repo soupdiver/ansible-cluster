@@ -1,0 +1,48 @@
+---
+# Playbook for app web servers
+
+- name: create site configurations
+  sudo: yes
+  action: template src=sites-available/{{ item }}.j2 dest=/etc/nginx/sites-available/{{ item }}
+  with_items:
+    - cluster.dev
+
+- name: enable sites
+  sudo: yes
+  action: file state=link src=/etc/nginx/sites-available/{{ item }} path=/etc/nginx/sites-enabled/{{ item }}
+  with_items:
+    - cluster.dev
+  notify:
+    - restart nginx
+
+- name: create web root
+  sudo: yes
+  tags: init
+  file:
+    path: /var/www/{{ servername }}/public
+    owner: vagrant
+    group: www-data
+    mode: 0774
+    recurse: true
+    state: directory
+
+- name: add web content
+  sudo: yes
+  tags:
+   - init
+   - content
+  copy:
+    src: www/index.php
+    dest: /var/www/{{ servername }}/public/index.php
+    #directory_mode: true
+
+- name: set permissions for web root
+  sudo: yes
+  tags: init content
+  file:
+    path: /var/www/{{ servername }}
+    owner: vagrant
+    group: www-data
+    mode: 0774
+    recurse: true
+    state: directory

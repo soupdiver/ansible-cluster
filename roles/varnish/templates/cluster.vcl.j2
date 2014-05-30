@@ -1,0 +1,38 @@
+backend web1 {
+  .host = "192.168.22.10";
+  .port = "80";
+  .probe = {
+    .url = "/";
+    .interval = 5s;
+    .timeout = 1 s;
+    .window = 5;
+    .threshold = 3;
+  }
+}
+
+backend web2 {
+  .host = "192.168.22.11";
+  .port = "80";
+  .probe = {
+    .url = "/";
+    .interval = 5s;
+    .timeout = 1 s;
+    .window = 5;
+    .threshold = 3;
+  }
+}
+
+director cluster round-robin {
+        {
+                .backend = web1;
+        }
+        {
+                .backend = web2;
+        }
+}
+
+sub vcl_recv {
+   if (req.http.host ~ "^(www.)?cluster.dev$") {
+       set req.backend = cluster;
+   }
+}

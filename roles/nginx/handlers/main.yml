@@ -1,0 +1,13 @@
+---
+# Handlers for webservers
+- name: restart nginx
+  service: name=nginx state=restarted
+  sudo: yes
+
+- name: reload nginx configuration
+  service: name=nginx state=reloaded
+  sudo: yes
+
+- name: restart fpm
+  service: name=php5-fpm state=restarted
+  sudo: yes

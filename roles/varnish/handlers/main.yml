@@ -1,0 +1,10 @@
+---
+# Handlers for varnish servers
+
+- name: reload varnish
+  service: name=varnish state=reloaded
+  sudo: yes
+
+- name: restart varnish
+  service: name=varnish state=restarted
+  sudo: yes

@@ -1,0 +1,24 @@
+server {
+  server_tokens off;
+  
+  listen {{ http_port }} default_server;
+
+  server_name {{ servername }};
+
+  root {{ webroot }};
+  index index.php index.html index.htm;
+
+  location / {
+     try_files $uri $uri/ /index.php$is_args$args;
+  }
+
+  location ~ \.php$ {
+    try_files $uri /index.php =404;
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+    fastcgi_index index.php;
+    
+    include fastcgi_params;
+
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; 
+  }
+}
