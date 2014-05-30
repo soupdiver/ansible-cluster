@@ -1,0 +1,34 @@
+---
+# The main playbook to deploy the cluster
+
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+    webroot: /var/www/cluster.dev/public
+    servername: cluster.dev
+  remote_user: vagrant
+  tags:
+    - web
+  roles:
+    - nginx
+    - app_web
+
+- hosts: databases
+  vars:
+    db_name: cluster
+    db_user: foobar
+    db_pass: foobar
+  remote_user: vagrant
+  tags:
+    - db
+  roles:
+    - postgresql
+    - app_db
+
+- hosts: load_balancers
+  remote_user: vagrant
+  tags:
+    - load
+  roles:
+    - varnish
