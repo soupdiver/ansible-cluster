@@ -11,8 +11,10 @@
   tags:
     - web
   roles:
+    - common
     - nginx
     - app_web
+    #- composer
 
 - hosts: databases
   vars:
@@ -23,6 +25,7 @@
   tags:
     - db
   roles:
+    - common
     - postgresql
     - app_db
 
@@ -31,4 +34,5 @@
   tags:
     - load
   roles:
+    - common
     - varnish
