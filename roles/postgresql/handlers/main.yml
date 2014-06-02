@@ -1,4 +1,5 @@
 ---
 # Handlers for postgresql servers
 - name: restart PostgreSQL
+  sudo: yes
   action: service name=postgresql state=restarted
