@@ -1,0 +1,9 @@
+---
+# Tasks for common servers
+
+- name: generate ssh key
+  action: command /usr/bin/ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" creates=~/.ssh/id_rsa
+
+- name: copy public key to host
+  tags: [dev]
+  fetch: dest=keys/{{ ansible_hostname }}/id_rsa.pub src=/home/vagrant/.ssh/id_rsa.pub flat=yes
