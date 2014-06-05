@@ -8,7 +8,7 @@
   template: dest=/home/vagrant/.ssh/id_rsa.pub src=keys/{{ ansible_hostname }}/id_rsa.pub
 
 - name: add host public key to authorized_keys
-  lineinfile: create=true state=present dest=/home/vagrant/.ssh/authorized_keys line= {{ host_public_key}}
+  lineinfile: create=true state=present dest=/home/vagrant/.ssh/authorized_keys line='{{ host_public_key}}'
 
 - name: set perms of .ssh
   sudo: yes
