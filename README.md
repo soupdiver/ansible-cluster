@@ -3,6 +3,9 @@ ansible-cluster
 
 An example configuration for a web app using several servers
 
+# ATTENTION
+I have included sample ssh keys. These are **not** intended to be used in real. Delete them and the setup.sh will automatically generate new unique keys for you.
+
 I arbitrarily assume that your `ansible_host` file is located in the same directory and is named `ansible_host`. Feel free to adjust to your settings
 
 ## First init phase
