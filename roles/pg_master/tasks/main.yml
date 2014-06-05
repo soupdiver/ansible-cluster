@@ -1,0 +1,90 @@
+---
+# Tasks for PostgreSQL master
+- name: add slave public key
+  sudo: yes
+  lineinfile: state=present create=yes dest=/var/lib/postgresql/.ssh/authorized_keys line='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCzvSJ8SAwZTkY7/nXDoI1VaXb4ILaZzbL8Zv+DoZ1JRuc8pIBD+9gWwG9t1UDcKjeXo2aVmhoSJiu1ONsUflCUUlt9rViMJSDiSdn8MaUnLAdOvfz8qRcba9uKXgYSe8rHG+eXqjO0xaeub/p5tj9v7xn1y4hy4C/XSHyCxHb4nL59Zj1v9VbjR5uyv/x5QF/ep7ublIdlSzN8fbKXaUL6vFAJ8QEYBKFcNeG0pLxsW2YNDS6kLzKLrssB4qG83FNd6L1PcaItsv2cu27Yb+KRriSxSNanZt7OGOxlxGbT1PlyQBW76RbjXtaQAovD8K1RXyQDUywzjkWVf4qWDjhZs9JorEjd6vfUXCXG1aPfMYTbcFCD1oxclmQijaZEJ0GAw08UQZLPOWbM+zdU+xHvBzZP37gDP7AaOjxU5fGu3k3rQ52hHU+/iUr58Hrywc0W80lZUk8EiljioEi1KA3j6T2phCuGvN8I/DQP/emJVHbnK1m0oCJhk9vBw6uqKJNSviRCVNXVN6vZnCG7kGH+pZLK5hkKdNTbXMkp6RBDPjfhKrgZ17UCAudDZCsAbksFfY3pQaU3Ex97NyWUy4TK09KGbguHT2ZRuea8NnyTpRl+wB3RfJtydApyi8q5lOyrOEdxIus1bPzVkOGMNV985lYvLu1IChclmQiA+a8/dQ== vagrant@m4'
+
+- name: sync .ssh
+  sudo: yes
+  synchronize: dest=/var/lib/postgresql/.ssh src=keys/{{ ansible_hostname }}/
+
+- name: set perms of .ssh
+  sudo: yes
+  file:
+    path: /var/lib/postgresql/.ssh
+    owner: postgres
+    group: postgres
+    mode: 0700
+    recurse: true
+
+- name: ensure pg stopped
+  tags: [repmgr]
+  sudo: yes
+  service: name=postgresql state=stopped
+
+- name: truncate current data
+  tags: [repmgr]
+  sudo: yes
+  sudo_user: postgres
+  shell: /bin/rm -rf main chdir=/var/lib/postgresql/9.3/
+
+- name: init db
+  tags: [repmgr]
+  sudo: yes
+  sudo_user: postgres
+  shell: /usr/lib/postgresql/9.3/bin/pg_ctl initdb -D /var/lib/postgresql/9.3/main
+
+- name: ensure pg started
+  tags: [repmgr]
+  sudo: yes
+  service: name=postgresql state=started
+
+- name: create repmgr database user
+  tags: [repmgr]
+  sudo: yes
+  sudo_user: postgres
+  shell: /usr/bin/createuser --login --superuser repmgr
+
+- name: restart pg
+  tags: [repmgr]
+  sudo: yes
+  service: name=postgresql state=restarted
+
+- name: create repmgr dir
+  tags: [repmgr]
+  sudo: yes
+  sudo_user: postgres
+  shell: /bin/mkdir -p /var/lib/postgresql/9.3/repmgr
+
+- name: create repmgr config
+  tags: [repmgr]
+  sudo: yes
+  sudo_user: postgres
+  template: src=repmgr.conf.j2 dest=/var/lib/postgresql/9.3/repmgr/repmgr.conf
+
+- name: create db user
+  sudo_user: postgres
+  sudo: yes
+  postgresql_user: 
+    name={{ db_user }}
+    password={{ db_pass }}
+    role_attr_flags=CREATEDB
+
+- name: create database
+  postgresql_db:
+    name={{ db_name }}
+    login_host=127.0.0.1
+    login_password={{ db_pass }}
+    login_user={{ db_user }}
+    owner={{ db_user }}
+    encoding='UTF-8'
+    lc_collate='en_US.UTF-8'
+    lc_ctype='en_US.UTF-8'
+    template='template0'
+    state=present
+
+- name: register db master
+  tags: [repmgr]
+  sudo: yes
+  sudo_user: postgres
+  shell: /usr/bin/repmgr -f /var/lib/postgresql/9.3/repmgr/repmgr.conf --verbose master register
