@@ -8,6 +8,10 @@
   service: name=nginx state=reloaded
   sudo: yes
 
+- name: reload nginx
+  service: name=nginx state=reloaded
+  sudo: yes
+
 - name: restart fpm
   service: name=php5-fpm state=restarted
   sudo: yes

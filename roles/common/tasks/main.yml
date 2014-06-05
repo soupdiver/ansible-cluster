@@ -1,8 +1,24 @@
 ---
 # Tasks for common servers
 
-- name: generate ssh key
-  action: command /usr/bin/ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" creates=~/.ssh/id_rsa
+- name: add id_rsa
+  template: dest=/home/vagrant/.ssh/id_rsa src=keys/{{ ansible_hostname }}/id_rsa
 
-- name: copy public key to host
-  fetch: dest=keys/{{ ansible_hostname }}/id_rsa.pub src=/home/vagrant/.ssh/id_rsa.pub flat=yes
+- name: add id_rsa.pub
+  template: dest=/home/vagrant/.ssh/id_rsa.pub src=keys/{{ ansible_hostname }}/id_rsa.pub
+
+- name: add host public key to authorized_keys
+  lineinfile: create=true state=present dest=/home/vagrant/.ssh/authorized_keys line= {{ host_public_key}}
+
+- name: set perms of .ssh
+  sudo: yes
+  file:
+    path: /home/vagrant/.ssh
+    owner: vagrant
+    group: vagrant
+    mode: 0700
+    recurse: true
+
+- name: update sources.list
+  sudo: yes
+  template: src=sources.list.j2 dest=/etc/apt/sources.list

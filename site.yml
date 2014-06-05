@@ -1,6 +1,46 @@
 ---
 # The main playbook to deploy the cluster
 
+#init our machines
+- hosts: targets
+  remote_user: vagrant
+  tags:
+    - init
+  roles:
+    - common
+
+#setup our databases
+- hosts: databases
+  remote_user: vagrant
+  tags:
+    - setup_db
+  roles:
+    - postgresql
+
+#setup cluster master
+- hosts: databases_master
+  remote_user: vagrant
+  vars:
+    db_name: cluster
+    db_user: foobar
+    db_pass: foobar
+  tags:
+    - setup_db_cluster
+  roles:
+    - pg_master
+
+#setup cluster hot standby
+- hosts: databases_slave
+  remote_user: vagrant
+  vars:
+    db_name: cluster
+    db_master: 192.168.22.12
+  tags:
+    - setup_db_cluster
+  roles:
+    - pg_slave
+
+#setup our web servers
 - hosts: webservers
   vars:
     http_port: 80
@@ -9,30 +49,15 @@
     servername: cluster.dev
   remote_user: vagrant
   tags:
-    - web
+    - setup_web
   roles:
-    - common
     - nginx
     - app_web
-    #- composer
 
-- hosts: databases
-  vars:
-    db_name: cluster
-    db_user: foobar
-    db_pass: foobar
-  remote_user: vagrant
-  tags:
-    - db
-  roles:
-    - common
-    - postgresql
-    - app_db
-
+#setup our load balancers
 - hosts: load_balancers
   remote_user: vagrant
   tags:
-    - load
+    - setup_load_balancer
   roles:
-    - common
     - varnish

@@ -3,42 +3,47 @@
 
 - name: create site configurations
   sudo: yes
-  action: template src=sites-available/{{ item }}.j2 dest=/etc/nginx/sites-available/{{ item }}
-  with_items:
-    - cluster.dev
+  template: src=sites-available/{{ item }}.j2 dest=/etc/nginx/sites-available/{{ item }}
+  with_items: [cluster.dev]
 
 - name: enable sites
   sudo: yes
   action: file state=link src=/etc/nginx/sites-available/{{ item }} path=/etc/nginx/sites-enabled/{{ item }}
-  with_items:
-    - cluster.dev
-  notify:
-    - restart nginx
+  with_items: [cluster.dev]
 
-- name: create web root
+- name: install composer
+  shell: curl -sS https://getcomposer.org/installer | /usr/bin/php && sudo /bin/mv -f composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+
+- name: set perms of /var/www
   sudo: yes
-  tags: init
   file:
-    path: /var/www/{{ servername }}/public
+    path: /var/www
     owner: vagrant
     group: www-data
     mode: 0774
-    recurse: true
     state: directory
 
-- name: add web content
-  sudo: yes
-  tags:
-   - init
-   - content
-  copy:
-    src: www/index.php
-    dest: /var/www/{{ servername }}/public/index.php
-    #directory_mode: true
+- name: get repo
+  tags: [install_app, update_app]
+  git: repo=git@github.com:soupdiver/ansible-app.git accept_hostkey=true
+       dest=/var/www/{{ servername }}
+
+- name: composer update
+  tags: [install_app, update_app]
+  composer: prefer_dist=true working_dir=/var/www/{{ servername }}
+
+- name: artisan migrate install
+  tags: [install_app]
+  shell: chdir=/var/www/{{ servername }} /usr/bin/php artisan migrate:install
+  ignore_errors: yes
+
+- name: artisan migrate
+  tags: [install_app, update_app]
+  shell: chdir=/var/www/{{ servername }} /usr/bin/php artisan migrate
 
 - name: set permissions for web root
+  tags: [install_app, update_app]
   sudo: yes
-  tags: init content
   file:
     path: /var/www/{{ servername }}
     owner: vagrant
@@ -46,3 +51,7 @@
     mode: 0774
     recurse: true
     state: directory
+
+- name: restart nginx
+  service: name=nginx state=restarted
+  sudo: yes

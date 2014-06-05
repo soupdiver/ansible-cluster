@@ -1,12 +1,54 @@
 ---
 # Playbook for postgresql servers
 - name: Install packages
-  action: apt pkg={{item}} state=latest update_cache=yes
+  apt: pkg={{item}} state=latest  update_cache=yes
   sudo: yes
   with_items:
     - postgresql-9.3
+    - postgresql-server-dev-9.3
     - postgresql-contrib
     - python-psycopg2
+    - libxslt-dev
+    - libxml2-dev
+    - libpam-dev
+    - libedit-dev
 
-- name: ensure postgresql is running
+- name: ensure postgresql is started
+  sudo: yes
   service: name=postgresql state=started
+
+- name: update postgresql.conf
+  sudo: yes
+  template: src=postgresql.conf.j2 dest=/etc/postgresql/9.3/main/postgresql.conf
+
+- name: update pg_hba.conf
+  sudo: yes
+  template: src=pg_hba.conf.j2 dest=/etc/postgresql/9.3/main/pg_hba.conf
+  notify: [restart PostgreSQL]
+
+- name: download repmgr source
+  tags: [repmgr]
+  get_url: dest=~/repmgr-2.0.tar.gz url=http://repmgr.org/download/repmgr-2.0.tar.gz
+
+- name: extract repmgr source
+  tags: [repmgr]
+  shell: /bin/tar xvzf repmgr-2.0.tar.gz
+
+- name: make repmgr
+  tags: [repmgr]
+  shell: chdir=~/repmgr-2.0 /usr/bin/make USE_PGXS=1
+
+- name: make install repmgr
+  tags: [repmgr]
+  sudo: yes
+  shell: creates=/usr/bin/repmgr chdir=/home/vagrant/repmgr-2.0 /usr/bin/make USE_PGXS=1 install
+
+- name: update alternatives repmgr
+  tags: [repmgr]
+  sudo: yes
+  shell: update-alternatives --install /usr/bin/repmgr repmgr /usr/lib/postgresql/9.3/bin/repmgr 10
+
+- name: update alternatives repmgrd
+  tags: [repmgr]
+  sudo: yes
+  shell: update-alternatives --install /usr/bin/repmgrd repmgrd /usr/lib/postgresql/9.3/bin/repmgrd 10

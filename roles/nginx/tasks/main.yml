@@ -3,12 +3,20 @@
 
 - name: Install packages
   sudo: yes
-  action: apt pkg={{item}} state=latest update_cache=yes
+  apt: pkg={{item}} state=latest update_cache=yes
   with_items:
     - nginx
     - php5-fpm
     - php5-mcrypt
     - php5-pgsql
+    - php5-cli
+    - php5-sqlite
+    - git
+
+- name: ensure mcrypt is enabled
+  sudo: yes
+  shell: /usr/sbin/php5enmod mcrypt
+  notify: [restart fpm]
 
 - name: ensure php5-fpm is running
   service: name=php5-fpm state=started
@@ -20,26 +28,20 @@
 
 - name: remove default site
   sudo: yes
-  action: file path=/etc/nginx/sites-enabled/default state=absent
-  notify:
-    - reload nginx
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: [reload nginx]
 
 - name: remove default index.html
   sudo: yes
-  action: file path=/etc/nginx/sites-enabled/index.html state=absent
-  notify:
-    - reload nginx
+  file: path=/etc/nginx/sites-enabled/index.html state=absent
+  notify: [reload nginx]
 
 - name: add php.ini
-  action: template src=php.ini dest=/etc/php5/fpm/php.ini
+  template: src=php.ini dest=/etc/php5/fpm/php.ini
   sudo: yes
-  notify:
-    - restart fpm
-    - restart nginx
+  notify: [restart fpm, restart nginx]
 
 - name: add www.conf
-  action: template src=www.conf dest=/etc/php5/fpm/pool.d/www.conf
+  template: src=www.conf dest=/etc/php5/fpm/pool.d/www.conf
   sudo: yes
-  notify:
-    - restart fpm
-    - restart nginx
+  notify: [restart fpm, restart nginx]
