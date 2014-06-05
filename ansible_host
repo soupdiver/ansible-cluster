@@ -1,0 +1,23 @@
+[targets]
+m1 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.10
+m2 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.11
+m3 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.12
+m4 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.13
+m5 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.14
+
+[databases]
+m3
+m4
+
+[databases_master]
+m3
+
+[databases_slave]
+m4
+
+[webservers]
+m1
+m2
+
+[load_balancers]
+m5
