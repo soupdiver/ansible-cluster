@@ -3,6 +3,8 @@ ansible-cluster
 
 An example configuration for a web app using several servers
 
+I arbitrarily assume that your `ansible_host` file is located in the same directory and is named `arbitrarily`. Feel free to adjust to your settings
+
 ## First init phase
 `ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook site.yml -i ansible_host -t init -k`
 
