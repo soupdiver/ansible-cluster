@@ -9,7 +9,7 @@ I arbitrarily assume that your `ansible_host` file is located in the same direct
 I have included sample ssh keys. These are **not** intended to be used in real. Delete them and the setup.sh will automatically generate new unique keys for you.
 
 ## First init phase
-`ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook site.yml -i ansible_host -t init -k`
+`ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook site.yml -i ansible_host -t init --ask-pass`
 
 This step will setup your vms in a way that you can directly ssh into them because this is the basic requirement for ansible to work.
 
