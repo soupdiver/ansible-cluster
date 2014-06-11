@@ -17,7 +17,7 @@ This step will setup your vms in a way that you can directly ssh into them becau
 maybe wrong fingerprint in known_hosts
 
 ## Start
-`ansible-playbook site.yml -i ansible_host --skip-tags=init`
+`ansible-playbook site.yml -i ansible_host --skip-tags=init --forks=1`
 
 ## Available Tags
 * init
