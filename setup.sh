@@ -17,7 +17,13 @@ do
   fi
   
   cd "machines/m$i"
-  vagrant destroy -f
+
+  if [ $1  == "destroy" ]; then
+    vagrant destroy -f
+  fi
+  if [ $1  == "stop" ]; then
+    vagrant halt
+  fi
   vagrant up
   cd ..
   cd ..
