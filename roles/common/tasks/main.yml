@@ -1,11 +1,10 @@
 ---
 # Tasks for common servers
-
 - name: add id_rsa
-  copy: content={{ private_key_vagrant }} dest=/home/vagrant/.ssh/id_rsa
+  copy: content="{{ lookup('file', '../../../keys/' + ansible_hostname + '/id_rsa') }}" dest=/home/vagrant/.ssh/id_rsa
 
 - name: add id_rsa.pub
-  copy: content={{ public_key_vagrant }} dest=/home/vagrant/.ssh/id_rsa.pub
+  copy: content="{{ lookup('file', '../../../keys/' + ansible_hostname + '/id_rsa.pub') }}" dest=/home/vagrant/.ssh/id_rsa.pub
 
 - name: add host public key to authorized_keys
   authorized_key: user=vagrant state=present key="{{ host_public_key }}"

@@ -2,12 +2,11 @@
 # Tasks for PostgreSQL slave
 - name: add master public key
   sudo: yes
-  authorized_key: user=postgres state=present key={{ item }}
-  with_items: master_keys
+  authorized_key: user=postgres state=present key="{{ lookup('file', '../../../keys/' + item + '/id_rsa.pub') }}"
+  with_items: groups.databases_master
 
 - name: add master public to known_hosts
-  sudo: yes
-  shell: /usr/bin/ssh-keyscan -H {{ db_master }} >> /var/lib/postgresql/.ssh/known_hosts
+  shell: creates=/master_key_added /usr/bin/ssh-keyscan -H {{ db_master }} >> /var/lib/postgresql/.ssh/known_hosts && touch /master_key_added
 
 - name: sync .ssh
   sudo: yes
