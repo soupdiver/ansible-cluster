@@ -1,2 +1,2 @@
-db_name:
-db_master:
+db_name: cluster
+db_master: 192.168.22.12

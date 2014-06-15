@@ -1,5 +1,5 @@
-http_port:
-max_clients:
-webroot:
-servername:
 repo:
+http_port: 80
+max_clients: 200
+webroot: /var/www/cluster.dev/public
+servername: cluster.dev

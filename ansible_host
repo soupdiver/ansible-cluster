@@ -1,9 +1,9 @@
 [targets]
-m1 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.10
-m2 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.11
-m3 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.12
-m4 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.13
-m5 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.14
+m1 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.10 ansible_ssh_pass=vagrant
+m2 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.11 ansible_ssh_pass=vagrant
+m3 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.12 ansible_ssh_pass=vagrant
+m4 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.13 ansible_ssh_pass=vagrant
+m5 ansible_ssh_user=vagrant ansible_ssh_host=192.168.22.14 ansible_ssh_pass=vagrant
 
 [databases]
 m3
