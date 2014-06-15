@@ -24,7 +24,9 @@ do
   if [ $1  == "stop" ]; then
     vagrant halt
   fi
-  vagrant up
+  if [ $1  == "up" ]; then
+    vagrant up
+  fi
   cd ..
   cd ..
 done
