@@ -3,13 +3,11 @@
 
 - name: create site configurations
   sudo: yes
-  template: src=sites-available/{{ item }}.j2 dest=/etc/nginx/sites-available/{{ item }}
-  with_items: [cluster.dev]
+  template: src=sites-available/{{ servername }}.j2 dest=/etc/nginx/sites-available/{{ servername }}
 
-- name: enable sites
+- name: enable site
   sudo: yes
-  action: file state=link src=/etc/nginx/sites-available/{{ item }} path=/etc/nginx/sites-enabled/{{ item }}
-  with_items: [cluster.dev]
+  action: file state=link src=/etc/nginx/sites-available/{{ servername }} path=/etc/nginx/sites-enabled/{{ servername }}
 
 - name: install composer
   shell: curl -sS https://getcomposer.org/installer | /usr/bin/php && sudo /bin/mv -f composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
@@ -25,7 +23,7 @@
 
 - name: get repo
   tags: [install_app, update_app]
-  git: repo=git@github.com:soupdiver/ansible-app.git accept_hostkey=true
+  git: repo={{ repo }} accept_hostkey=true
        dest=/var/www/{{ servername }}
 
 - name: composer update
