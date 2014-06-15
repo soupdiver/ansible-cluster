@@ -2,8 +2,8 @@
 # Tasks for PostgreSQL master
 - name: add slave public key
   sudo: yes
-  authorized_key: user=postgres state=present key={{ item }}
-  with_items: slave_keys
+  authorized_key: user=postgres state=present key="{{ lookup('file', '../../../keys/' + item + '/id_rsa.pub') }}"
+  with_items: groups.databases_slave
 
 - name: sync .ssh
   sudo: yes
