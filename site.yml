@@ -24,6 +24,8 @@
     db_name: cluster
     db_user: foobar
     db_pass: foobar
+    slave_keys:
+      - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCzvSJ8SAwZTkY7/nXDoI1VaXb4ILaZzbL8Zv+DoZ1JRuc8pIBD+9gWwG9t1UDcKjeXo2aVmhoSJiu1ONsUflCUUlt9rViMJSDiSdn8MaUnLAdOvfz8qRcba9uKXgYSe8rHG+eXqjO0xaeub/p5tj9v7xn1y4hy4C/XSHyCxHb4nL59Zj1v9VbjR5uyv/x5QF/ep7ublIdlSzN8fbKXaUL6vFAJ8QEYBKFcNeG0pLxsW2YNDS6kLzKLrssB4qG83FNd6L1PcaItsv2cu27Yb+KRriSxSNanZt7OGOxlxGbT1PlyQBW76RbjXtaQAovD8K1RXyQDUywzjkWVf4qWDjhZs9JorEjd6vfUXCXG1aPfMYTbcFCD1oxclmQijaZEJ0GAw08UQZLPOWbM+zdU+xHvBzZP37gDP7AaOjxU5fGu3k3rQ52hHU+/iUr58Hrywc0W80lZUk8EiljioEi1KA3j6T2phCuGvN8I/DQP/emJVHbnK1m0oCJhk9vBw6uqKJNSviRCVNXVN6vZnCG7kGH+pZLK5hkKdNTbXMkp6RBDPjfhKrgZ17UCAudDZCsAbksFfY3pQaU3Ex97NyWUy4TK09KGbguHT2ZRuea8NnyTpRl+wB3RfJtydApyi8q5lOyrOEdxIus1bPzVkOGMNV985lYvLu1IChclmQiA+a8/dQ== vagrant@m4'
   tags:
     - setup_db_cluster
   roles:
@@ -35,6 +37,8 @@
   vars:
     db_name: cluster
     db_master: 192.168.22.12
+    master_keys:
+      - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCmSszSNRH4JV67VOWadLRAkPPidM/XV/oDjlT71ybFKLqQsG28KFcGur1gyJMxGiTEOq86fnQWHpjOxWtjKeXDGqaQ9h+eAq6y//kC63Jc5+9g8wwFzXW+h3vhuNqGHcLFfapmbj16p8JAieZQ8i94JNaWaB8GKO7ZkOnSXWA02EEbOTKD9FkvdJoQP8PUaehoUOAHDbc4lhPZxtE+mJ2N53zNinHpPmZ8Vk+7D7YKbiSKX3W/1p91NHfJovyyNwJLr/PSoJTq6lfGe7SkV5txmvb7qsSpXqh/nv+k7SAboFg6t8PyvUNY97yLuj+ipfoLtP4JbW0aCoADm9rH1s4hC4tkgtlDbWkmpr7c2b6eyaA8RYbYtxDMIAa/HkfEgu2Civw6L9X9N0J2gy5feg6YGW/WlvJbpEXg3OcSMbFSOo6iP3BPEO+51mB0wjIJztlEj8608QVdMOCFL4aQ9Ckum29Z7Kz6jG3bcWXM+C/Nrc4dTCFkhFHE8S9vWZrBT/pbnwXaJT/AeLTICziGUzKs3RQ73lCxT32O84o1Bw24QqExrNGsXo980OwjvGdsq8BnfpRzE1gtB/zYaz7FPc+rO/sG5NsWzWlVsV0ZvghXnrh3J03QUSnwv+/w2TXN0pRm0xVGd0nEbXBmVWyL4KKoGv8a7fbQCynI+y/Dn5g/+w== vagrant@m3'
   tags:
     - setup_db_cluster
   roles:

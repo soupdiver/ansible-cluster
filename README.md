@@ -33,7 +33,3 @@ maybe wrong fingerprint in known_hosts
 
 ## Known issues
 * add `-f 1` when running multiple (vagrant) machines on one host. Otherwise apt-get often exits with an error during update or install
-
-## TODO
-* `roles/pg_master/tasks/main/add slave public key` don't use fix value. Make it generic
-* `roles/pg_slave/tasks/main/add master public key` don't use fix value. Make it generic
