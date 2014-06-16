@@ -1,5 +1,5 @@
-repo:
 http_port: 80
 max_clients: 200
 webroot: /var/www/cluster.dev/public
 servername: cluster.dev
+repo: git@github.com:soupdiver/ansible-app.git
