@@ -21,15 +21,18 @@ maybe wrong fingerprint in known_hosts
 
 ## Available Tags
 * init
-* setup_db
-* setup_db_cluster
-* setup_web
+* setup_db (installs PostgreSQL and repmgr)
+* setup_db_cluster (sets up master and slave configuration)
+* setup_web (installs nginx & composer)
 * setup_load_balancer
-* install_app
-* update_app
+* install_app (initial installation of the web application)
+* update_app (updates the web application to the latest version)
 
 # Before start
 * add the public key of the machine from where you run ansible to `group_vars/all`
 
 ## Known issues
 * add `-f 1` when running multiple (vagrant) machines on one host. Otherwise apt-get often exits with an error during update or install
+
+## TODO
+* find a reliable way for adding a key to known_hosts only once
