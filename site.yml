@@ -3,7 +3,6 @@
 
 #init our machines
 - hosts: targets
-  remote_user: vagrant
   tags:
     - init
   roles:
@@ -11,7 +10,6 @@
 
 #setup our databases
 - hosts: databases
-  remote_user: vagrant
   tags:
     - setup_db
   roles:
@@ -19,7 +17,6 @@
 
 #setup cluster master
 - hosts: databases_master
-  remote_user: vagrant
   tags:
     - setup_db_cluster
   roles:
@@ -27,7 +24,6 @@
 
 #setup cluster hot standby
 - hosts: databases_slave
-  remote_user: vagrant
   tags:
     - setup_db_cluster
   roles:
@@ -35,7 +31,6 @@
 
 #setup our web servers
 - hosts: webservers
-  remote_user: vagrant
   tags:
     - setup_web
   roles:
@@ -44,7 +39,6 @@
 
 #setup our load balancers
 - hosts: load_balancers
-  remote_user: vagrant
   tags:
     - setup_load_balancer
   roles:
